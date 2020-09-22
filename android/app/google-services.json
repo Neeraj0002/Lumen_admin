@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "560637482990",
+    "firebase_url": "https://lumen-56a37.firebaseio.com",
+    "project_id": "lumen-56a37",
+    "storage_bucket": "lumen-56a37.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:560637482990:android:6428b643dc7a8a7b6d20ff",
+        "android_client_info": {
+          "package_name": "com.torcinfotech.lumen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "560637482990-ie6j4c20k4vqdtulm1lb2la6huck20kb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBrSCcgXHLJ6WFO59AJ3h1hCWY3fAJfCE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "560637482990-ie6j4c20k4vqdtulm1lb2la6huck20kb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:560637482990:android:f8ea512ed09ece0f6d20ff",
+        "android_client_info": {
+          "package_name": "com.torcinfotech.lumen_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "560637482990-ie6j4c20k4vqdtulm1lb2la6huck20kb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBrSCcgXHLJ6WFO59AJ3h1hCWY3fAJfCE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "560637482990-ie6j4c20k4vqdtulm1lb2la6huck20kb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
