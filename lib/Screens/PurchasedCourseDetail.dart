@@ -143,8 +143,8 @@ class _PurchasedCourseDetailsState extends State<PurchasedCourseDetails>
                     ));
               },
               flashCardAction: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => FlashCardScreen()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => FlashCardScreen(show: true)));
               }),
           body: TabBarView(children: [
             VideoList(
@@ -351,6 +351,10 @@ class _VideoListState extends State<VideoList> {
   ChewieController chewieController;
   int nowPlaying = 0;
   bool playing = false;
+  pauseVideo() {
+    chewieController.pause();
+  }
+
   @override
   void initState() {
     if (widget.data["video"] != null) {
@@ -396,8 +400,15 @@ class _VideoListState extends State<VideoList> {
   void dispose() {
     if (widget.data["video"] != null) {
       videoPlayerController.dispose();
+      chewieController.dispose();
     }
     super.dispose();
+  }
+
+  @override
+  void deactivate() {
+    chewieController.pause();
+    super.deactivate();
   }
 
   @override

@@ -3,15 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:lumin_admin/API_Functions/apiConfig.dart';
 
-Future addFlashCardAPI(
-  BuildContext context, {
-  @required String content,
-}) async {
+Future addFlashCardAPI(BuildContext context,
+    {@required String content, @required String answer}) async {
   final url = "$mainUrl2/flashcard";
 
-  Map<String, dynamic> body = {
-    'Content': content,
-  };
+  Map<String, dynamic> body = {'Content': content, 'answer': answer};
 
   print(body);
 

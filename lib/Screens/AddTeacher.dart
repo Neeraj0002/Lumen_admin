@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lumin_admin/API_Functions/Authentication/loginAPI.dart';
 import 'package:lumin_admin/API_Functions/Authentication/signUpAPI.dart';
 import 'package:lumin_admin/Components/appBar.dart';
 import 'package:lumin_admin/Components/buttons.dart';
@@ -41,24 +44,25 @@ class _AddTeacherState extends State<AddTeacher> {
     setState(() {});
   }
 
-  Future singUpFirebase(String name) async {
+  Future singUpFirebase(String name, String uid) async {
     String status = "fail";
     await authService
         .signUpWithEmailAndPassword(
             usernameController.text, passwordController.text)
         .then((result) async {
+      print(result);
       if (result != null) {
         status = "success";
         Map<String, String> userDataMap = {
           'nickname': "$name",
           'email': usernameController.text,
-          'id': result.uid,
+          'id': uid != null ? uid : result.uid,
           'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
           'chattingWith': null
         };
 
         await databaseMethods
-            .addUserInfo(userDataMap, result.uid)
+            .addUserInfo(userDataMap, uid)
             .then((value) => status = "success");
       }
     });
@@ -160,98 +164,108 @@ class _AddTeacherState extends State<AddTeacher> {
                           };
                           signUpAPI(_body).then((value) {
                             if (value != "fail") {
-                              singUpFirebase(nameController.text).then((value) {
-                                Navigator.pop(context);
-                                if (value != "fail") {
-                                  showDialog(
-                                      context: context,
-                                      child: AlertDialog(
-                                        title: Text(
-                                          "Registered successfully",
-                                          style: TextStyle(
-                                              color: Colors.green,
-                                              fontFamily: "Roboto",
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        content: Text(
-                                          "Share login details",
-                                          style: TextStyle(
-                                              color: Colors.green,
-                                              fontFamily: "Roboto",
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        actions: [
-                                          FlatButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                              Navigator.of(context).pop();
-                                              widget.parent.setState(() {});
-                                            },
-                                            child: Text(
-                                              "Close",
-                                              style: TextStyle(
-                                                color: Colors.blue,
-                                              ),
-                                            ),
-                                          ),
-                                          FlatButton(
-                                            color: Colors.blue,
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                              final RenderBox box =
-                                                  context.findRenderObject();
-                                              Share.text(
-                                                  "Your Login Details",
-                                                  "Email:${usernameController.text}\nPassword:${passwordController.text}\n\nLumen Academy",
-                                                  "text/plain");
-                                              usernameController.clear();
-                                              passwordController.clear();
-                                              phoneController.clear();
-                                              passwordController.clear();
-                                              cPasswordController.clear();
-                                              nameController.clear();
-                                            },
-                                            child: Text(
-                                              "Share",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ));
-                                } else {
-                                  showDialog(
-                                      context: context,
-                                      child: AlertDialog(
-                                        title: Text(
-                                          "Registration failed",
-                                          style: TextStyle(
-                                              color: Colors.red,
-                                              fontFamily: "Roboto",
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        content: Text(
-                                          "Please try again",
-                                          style: TextStyle(
-                                              color: Colors.green,
-                                              fontFamily: "Roboto",
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        actions: [
-                                          FlatButton(
-                                            onPressed: () =>
-                                                Navigator.of(context).pop(),
-                                            child: Text(
-                                              "OK",
-                                              style: TextStyle(
-                                                color: Colors.blue,
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ));
+                              loginAPI(context, usernameController.text,
+                                      passwordController.text)
+                                  .then((value) {
+                                var parsed, userId;
+                                if (value != 'fail' && value != null) {
+                                  parsed = jsonDecode(value);
+                                  userId = parsed['Uid'];
                                 }
+                                singUpFirebase(nameController.text, userId)
+                                    .then((value) {
+                                  Navigator.pop(context);
+                                  if (value != "fail") {
+                                    showDialog(
+                                        context: context,
+                                        child: AlertDialog(
+                                          title: Text(
+                                            "Registered successfully",
+                                            style: TextStyle(
+                                                color: Colors.green,
+                                                fontFamily: "Roboto",
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          content: Text(
+                                            "Share login details",
+                                            style: TextStyle(
+                                                color: Colors.green,
+                                                fontFamily: "Roboto",
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          actions: [
+                                            FlatButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                                Navigator.of(context).pop();
+                                                widget.parent.setState(() {});
+                                              },
+                                              child: Text(
+                                                "Close",
+                                                style: TextStyle(
+                                                  color: Colors.blue,
+                                                ),
+                                              ),
+                                            ),
+                                            FlatButton(
+                                              color: Colors.blue,
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                                final RenderBox box =
+                                                    context.findRenderObject();
+                                                Share.text(
+                                                    "Your Login Details",
+                                                    "Email:${usernameController.text}\nPassword:${passwordController.text}\n\nLumen Academy",
+                                                    "text/plain");
+                                                usernameController.clear();
+                                                passwordController.clear();
+                                                phoneController.clear();
+                                                passwordController.clear();
+                                                cPasswordController.clear();
+                                                nameController.clear();
+                                              },
+                                              child: Text(
+                                                "Share",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ));
+                                  } else {
+                                    showDialog(
+                                        context: context,
+                                        child: AlertDialog(
+                                          title: Text(
+                                            "Registration failed",
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontFamily: "Roboto",
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          content: Text(
+                                            "Please try again",
+                                            style: TextStyle(
+                                                color: Colors.green,
+                                                fontFamily: "Roboto",
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          actions: [
+                                            FlatButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              child: Text(
+                                                "OK",
+                                                style: TextStyle(
+                                                  color: Colors.blue,
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ));
+                                  }
+                                });
                               });
                             } else {
                               Navigator.pop(context);

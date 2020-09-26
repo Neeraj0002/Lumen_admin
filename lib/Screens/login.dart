@@ -192,6 +192,7 @@ class _LoginState extends State<Login> {
                                       prefs.setString("name", parsed["Name"]);
                                       prefs.setString("phone", parsed["Phone"]);
                                       prefs.setString("email", parsed["Email"]);
+                                      prefs.setString("userId", parsed["Uid"]);
                                       prefs.setString(
                                           "userGroup", parsed["Group"]);
                                       prefs

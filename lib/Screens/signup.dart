@@ -36,24 +36,25 @@ class _SignUpState extends State<SignUp> {
   AuthService authService = new AuthService();
   DatabaseMethods databaseMethods = new DatabaseMethods();
 
-  Future singUpFirebase(String name) async {
+  Future singUpFirebase(String name, String uid) async {
     String status = "fail";
     await authService
         .signUpWithEmailAndPassword(
             usernameController.text, passwordController.text)
         .then((result) async {
+      print(result);
       if (result != null) {
         status = "success";
         Map<String, String> userDataMap = {
           'nickname': "$name",
           'email': usernameController.text,
-          'id': result.uid,
+          'id': uid != null ? uid : result.uid,
           'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
           'chattingWith': null
         };
 
         await databaseMethods
-            .addUserInfo(userDataMap, result.uid)
+            .addUserInfo(userDataMap, uid)
             .then((value) => status = "success");
       }
     });
@@ -190,84 +191,111 @@ class _SignUpState extends State<SignUp> {
                                       };
                                       signUpAPI(_body).then((value) {
                                         if (value != "fail") {
-                                          singUpFirebase(nameController.text)
+                                          loginAPI(
+                                                  context,
+                                                  usernameController.text,
+                                                  passwordController.text)
                                               .then((value) {
-                                            Navigator.pop(context);
-                                            if (value != "fail") {
-                                              Navigator.pop(context);
-                                              showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return AlertDialog(
-                                                    title: Text(
-                                                      "Registratered successfully",
-                                                      style: TextStyle(
-                                                          color: Colors.green,
-                                                          fontFamily: "Roboto",
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    content: Text(
-                                                      "Please login to continue",
-                                                      style: TextStyle(
-                                                          color: Colors.green,
-                                                          fontFamily: "Roboto",
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    actions: [
-                                                      FlatButton(
-                                                        onPressed: () =>
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop(),
-                                                        child: Text(
-                                                          "OK",
-                                                          style: TextStyle(
-                                                            color: Colors.blue,
-                                                          ),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  );
-                                                },
-                                              );
-                                            } else {
-                                              showDialog(
-                                                  context: context,
-                                                  child: AlertDialog(
-                                                    title: Text(
-                                                      "Registration failed",
-                                                      style: TextStyle(
-                                                          color: Colors.red,
-                                                          fontFamily: "Roboto",
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    content: Text(
-                                                      "Please try again",
-                                                      style: TextStyle(
-                                                          color: Colors.green,
-                                                          fontFamily: "Roboto",
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    actions: [
-                                                      FlatButton(
-                                                        onPressed: () =>
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop(),
-                                                        child: Text(
-                                                          "OK",
-                                                          style: TextStyle(
-                                                            color: Colors.blue,
-                                                          ),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ));
+                                            var parsed, userId;
+                                            if (value != 'fail' &&
+                                                value != null) {
+                                              parsed = jsonDecode(value);
+                                              userId = parsed['Uid'];
                                             }
+                                            singUpFirebase(
+                                                    nameController.text, userId)
+                                                .then((value) {
+                                              Navigator.pop(context);
+                                              if (value != "fail") {
+                                                usernameController.clear();
+                                                nameController.clear();
+                                                passwordController.clear();
+                                                cPasswordController.clear();
+                                                phoneController.clear();
+                                                showDialog(
+                                                    context: context,
+                                                    child: AlertDialog(
+                                                      title: Text(
+                                                        "Registered successfully",
+                                                        style: TextStyle(
+                                                            color: Colors.green,
+                                                            fontFamily:
+                                                                "Roboto",
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      content: Text(
+                                                        "Please login to continue",
+                                                        style: TextStyle(
+                                                            color: Colors.green,
+                                                            fontFamily:
+                                                                "Roboto",
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      actions: [
+                                                        FlatButton(
+                                                          onPressed: () =>
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop(),
+                                                          child: Text(
+                                                            "OK",
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.blue,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ));
+                                                setState(() {
+                                                  goToRegister = false;
+                                                });
+                                              } else {
+                                                showDialog(
+                                                    context: context,
+                                                    child: AlertDialog(
+                                                      title: Text(
+                                                        "Registration failed",
+                                                        style: TextStyle(
+                                                            color: Colors.red,
+                                                            fontFamily:
+                                                                "Roboto",
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      content: Text(
+                                                        "Please try again",
+                                                        style: TextStyle(
+                                                            color: Colors.green,
+                                                            fontFamily:
+                                                                "Roboto",
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      actions: [
+                                                        FlatButton(
+                                                          onPressed: () =>
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop(),
+                                                          child: Text(
+                                                            "OK",
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.blue,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ));
+                                              }
+                                            });
                                           });
                                         } else {
                                           Navigator.pop(context);

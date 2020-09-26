@@ -38,7 +38,7 @@ class _ChatRoomState extends State<ChatRoom> {
 
   setCurrentId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    Constants.firebaseId = prefs.getString("firebaseId");
+    Constants.firebaseId = prefs.getString("userId");
   }
 
   @override

@@ -54,14 +54,14 @@ class _ChatAdminState extends State<ChatAdmin> {
 
   setChatTo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String id = prefs.getString("firebaseId") ?? '';
+    String id = prefs.getString("userId") ?? '';
     Constants.firebaseId = id;
     if (id.hashCode <= widget.chatRoomId.hashCode) {
       groupChatId = '$id-${widget.chatRoomId}';
     } else {
       groupChatId = '${widget.chatRoomId}-$id';
     }
-    print('THIS IS THE FIREBASE ID : $id');
+    print(groupChatId);
     FirebaseFirestore.instance
         .collection('users')
         .doc(id)
