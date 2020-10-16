@@ -6,6 +6,7 @@ import 'package:lumin_admin/API_Functions/getUserData.dart';
 import 'package:lumin_admin/Components/appBar.dart';
 import 'package:lumin_admin/Components/buttons.dart';
 import 'package:lumin_admin/Components/userDisplayCard.dart';
+import 'package:lumin_admin/EcommerceDashboard.dart';
 import 'package:lumin_admin/Essentials/colors.dart';
 import 'package:lumin_admin/Essentials/getterFunctions.dart';
 import 'package:lumin_admin/Essentials/storedData.dart';
@@ -142,14 +143,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           color: Color.fromRGBO(227, 89, 219, 1.0),
                           line1: "Courses",
                           line2: parsed["AllCourses"] == null
-                              ? "0"
+                              ? "--"
                               : parsed["AllCourses"].length.toString(),
                         );
                       } else {
                         return DisplayCard(
                           color: Color.fromRGBO(227, 89, 219, 1.0),
                           line1: "Courses",
-                          line2: "0",
+                          line2: "--",
                         );
                       }
                     }),
@@ -260,7 +261,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               },
                               text: "Live Class",
                               icon: MdiIcons.videoAccount),
-                          LearneeRoundedBtn(
+                          /*LearneeRoundedBtn(
                               action: () {
                                 Navigator.of(context).push(MaterialPageRoute(
                                   settings: RouteSettings(name: "/teachers"),
@@ -268,7 +269,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ));
                               },
                               text: "Requests",
-                              icon: MdiIcons.callReceived),
+                              icon: MdiIcons.callReceived),*/
                           LearneeRoundedBtn(
                             action: () {
                               showModalBottomSheet(
@@ -330,6 +331,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             },
                             text: "Financial",
                             icon: MdiIcons.finance,
+                          ),
+                          LearneeRoundedBtn(
+                            action: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                settings: RouteSettings(name: "/financial"),
+                                builder: (context) => EcommerceDashboard(),
+                              ));
+                            },
+                            text: "Ecommerce",
+                            icon: MdiIcons.cart,
                           ),
                         ],
                       ),

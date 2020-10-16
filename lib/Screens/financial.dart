@@ -18,13 +18,10 @@ class _FinancialState extends State<Financial> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: appbar.financialAppBar(
-            title: "Financial",
-            tabTitle1: "Sales",
-            //tabTitle2: "Balances",
-            tabTitle3: "Charge and Accounts"),
-        backgroundColor: bgColor,
-        body: TabBarView(
+          appBar: appbar.simpleAppBar(title: "Financial"),
+          backgroundColor: bgColor,
+          body:
+              PurchaseCourseList() /*TabBarView(
           children: [
             PurchaseCourseList(),
             /*Center(
@@ -38,8 +35,8 @@ class _FinancialState extends State<Financial> {
             ),*/
             ChargeAndAccounts()
           ],
-        ),
-      ),
+        ),*/
+          ),
     );
   }
 }

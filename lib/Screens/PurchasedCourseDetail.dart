@@ -29,7 +29,6 @@ class PurchasedCourseDetails extends StatefulWidget {
 
 class _PurchasedCourseDetailsState extends State<PurchasedCourseDetails>
     with TickerProviderStateMixin {
-  TabController _tabController;
   int tabIndex = 0;
   bool featured = false;
   bool popular = false;
@@ -41,13 +40,11 @@ class _PurchasedCourseDetailsState extends State<PurchasedCourseDetails>
 
   @override
   void initState() {
-    _tabController = TabController(length: 4, vsync: this);
     super.initState();
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
     super.dispose();
   }
 
@@ -64,7 +61,7 @@ class _PurchasedCourseDetailsState extends State<PurchasedCourseDetails>
               tab2: "Infromation",
               tab3: "Exam",
               tab4: "Manage",
-              title: "Course Name",
+              title: widget.data['title'],
               deleteAction: () {
                 showDialog(
                     context: context,
@@ -599,8 +596,8 @@ class _VideoListState extends State<VideoList> {
                               } else {
                                 nowPlaying = index;
                                 videoPlayerController =
-                                    VideoPlayerController.network(
-                                        widget.data["video"][0]["url"]);
+                                    VideoPlayerController.network(widget
+                                        .data["video"][nowPlaying]["url"]);
                                 chewieController = ChewieController(
                                     videoPlayerController:
                                         videoPlayerController,

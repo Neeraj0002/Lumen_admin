@@ -92,13 +92,13 @@ class _PurchaseCourseListState extends State<PurchaseCourseList> {
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
                       return snapshot
-                                  .data[index]['CourseDetails']['uid'].length !=
+                                  .data[index]['coursedetails']['uid'].length !=
                               0
                           ? _teacherCard(
                               email: snapshot.data[index]['email'],
-                              courseName: snapshot.data[index]['CourseDetails']
+                              courseName: snapshot.data[index]['coursedetails']
                                   ['title'],
-                              price: snapshot.data[index]['CourseDetails']
+                              price: snapshot.data[index]['coursedetails']
                                   ['price'])
                           : Container();
                     },

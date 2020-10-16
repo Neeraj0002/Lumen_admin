@@ -142,7 +142,7 @@ class _LiveScreenState extends State<LiveScreen> {
                                                                   ['channel'],
                                                           desc: liveclass.data[
                                                                   index]
-                                                              ['Description'],
+                                                              ['description'],
                                                           courseName: liveclass
                                                                   .data[index]
                                                               ['course'],
