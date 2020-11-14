@@ -104,13 +104,14 @@ class _ManageEcommerceSliderState extends State<ManageEcommerceSlider> {
           builder: (context, snapshot) {
             if (ConnectionState.done == snapshot.connectionState) {
               if (snapshot.hasData) {
-                print(snapshot.data);
+                print("DATA : ${snapshot.data}");
                 return ListView(
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
-                        children: List.generate(snapshot.data.length, (index) {
+                        children: List.generate(snapshot.data["Sliders"].length,
+                            (index) {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
@@ -132,7 +133,7 @@ class _ManageEcommerceSliderState extends State<ManageEcommerceSlider> {
                                   Container(
                                     height: 200,
                                     child: CachedNetworkImage(
-                                      imageUrl: snapshot.data[index]
+                                      imageUrl: snapshot.data["Sliders"][index]
                                           ["imageurl"],
                                       errorWidget: (context, url, error) {
                                         return Center(
@@ -215,9 +216,9 @@ class _ManageEcommerceSliderState extends State<ManageEcommerceSlider> {
 
                                                     deleteEcommerceSLiderImagesAPI(
                                                             context,
-                                                            id: snapshot
-                                                                    .data[index]
-                                                                ["id"])
+                                                            id: snapshot.data[
+                                                                    "Sliders"]
+                                                                [index]["id"])
                                                         .then((value) {
                                                       Navigator.of(context)
                                                           .pop();

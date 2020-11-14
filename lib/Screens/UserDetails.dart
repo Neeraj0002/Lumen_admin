@@ -66,7 +66,7 @@ class _UserDetailsState extends State<UserDetails> {
               future: getPurchasedCoureAPI(widget.data["Uid"]),
               builder: (context, teachersnapshot) {
                 if (teachersnapshot.connectionState == ConnectionState.done) {
-                  print(teachersnapshot.data);
+                  print("Data : ${teachersnapshot.data}");
                   return teachersnapshot.data != null
                       ? Column(
                           children: [
@@ -85,15 +85,15 @@ class _UserDetailsState extends State<UserDetails> {
                                   teachersnapshot.data.length, (index) {
                                 if (teachersnapshot.data != null) {
                                   return teachersnapshot
-                                              .data[index]['CourseDetails']
+                                              .data[index]['coursedetails']
                                                   ['uid']
                                               .length !=
                                           0
                                       ? CourseCard2(
                                           popular: teachersnapshot.data[index]
-                                              ['CourseDetails']['Popular'],
+                                              ['coursedetails']['Popular'],
                                           featured: teachersnapshot.data[index]
-                                              ['CourseDetails']['featured'],
+                                              ['coursedetails']['featured'],
                                           action: () {
                                             Navigator.of(context)
                                                 .push(MaterialPageRoute(
@@ -104,18 +104,18 @@ class _UserDetailsState extends State<UserDetails> {
                                                   PurchasedCourseDetails(
                                                 data:
                                                     teachersnapshot.data[index]
-                                                        ['CourseDetails'],
+                                                        ['coursedetails'],
                                                 parentKey: this,
                                               ),
                                             ));
                                           },
                                           title: teachersnapshot.data[index]
-                                              ['CourseDetails']['title'],
+                                              ['coursedetails']['title'],
                                           price:
-                                              "₹${teachersnapshot.data[index]['CourseDetails']['price']}",
+                                              "₹${teachersnapshot.data[index]['coursedetails']['price']}",
                                           time: "",
                                           imgUrl: teachersnapshot.data[index]
-                                              ['CourseDetails']['thumbnail'])
+                                              ['coursedetails']['thumbnail'])
                                       : Container(
                                           height: 100,
                                           width:
