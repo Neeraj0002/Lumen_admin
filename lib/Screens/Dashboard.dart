@@ -332,7 +332,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             text: "Financial",
                             icon: MdiIcons.finance,
                           ),
-                          LearneeRoundedBtn(
+                          //TO VIEW ECOMMERCE DASHBOARD UNCOMMENT THIS PART
+                          /*LearneeRoundedBtn(
                             action: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                 settings: RouteSettings(name: "/financial"),
@@ -341,7 +342,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             },
                             text: "Ecommerce",
                             icon: MdiIcons.cart,
-                          ),
+                          ),*/
                         ],
                       ),
                     );
