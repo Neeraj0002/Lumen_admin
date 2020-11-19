@@ -1,18 +1,23 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:lumin_admin/Components/EcommerceHomeItemCard.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lumin_admin/API_Functions/Ecommerce/Featured/addFeatured.dart';
+import 'package:lumin_admin/API_Functions/Ecommerce/Popular/addPopular.dart';
 import 'package:lumin_admin/Components/appBar.dart';
 import 'package:lumin_admin/Components/buttons.dart';
-import 'package:lumin_admin/Components/headingText.dart';
 import 'package:lumin_admin/Essentials/colors.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 // ignore: must_be_immutable
 class Product extends StatefulWidget {
   var data;
-  List similarProducts;
-  Product({@required this.data, @required this.similarProducts});
+  bool featured;
+  bool popular;
+  Product(
+      {@required this.data, @required this.featured, @required this.popular});
   @override
   _ProductState createState() => _ProductState(data);
 }
@@ -36,6 +41,7 @@ class _ProductState extends State<Product> {
     }
   }
 
+  // ignore: unused_element
   _starList(double value) {
     if (value == 5.0) {
       return List.generate(
@@ -128,31 +134,12 @@ class _ProductState extends State<Product> {
   @override
   Widget build(BuildContext context) {
     print(_data);
-    List imageList = _data["images"];
+    List imageList = _data["Images"];
     int price = _data["price"];
-    int offerPrice = _data["offer_price"];
+    int offerPrice = _data["offer_prize"];
     return Scaffold(
       appBar: appBar.simpleAppBar(title: null),
       backgroundColor: Colors.white,
-      bottomSheet: Container(
-        color: Colors.white,
-        height: 60,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(25, 4, 25, 4),
-          child: LearneeRegLogButton(
-              action: () {
-                showModalBottomSheet(
-                    context: context,
-                    builder: (context) {
-                      return QuantitySelector(
-                        parent: this,
-                      );
-                    });
-              },
-              color: appBarColor,
-              text: "Add to Cart"),
-        ),
-      ),
       body: LayoutBuilder(builder: (context, constraints) {
         return ListView(
           children: [
@@ -162,8 +149,8 @@ class _ProductState extends State<Product> {
               child: Stack(
                 children: [
                   Swiper(
-                    itemCount: _data["images"].length,
-                    autoplay: _data["images"].length > 1 ? true : false,
+                    itemCount: _data["Images"].length,
+                    autoplay: _data["Images"].length > 1 ? true : false,
                     onIndexChanged: (value) {
                       setState(() {
                         _current = value;
@@ -171,7 +158,7 @@ class _ProductState extends State<Product> {
                     },
                     itemBuilder: (context, index) {
                       return CachedNetworkImage(
-                        imageUrl: _data["images"][index],
+                        imageUrl: _data["Images"][index],
                         errorWidget: (context, url, error) {
                           return Center(
                             child: Icon(
@@ -291,16 +278,19 @@ class _ProductState extends State<Product> {
                             ),
                           ],
                         ),
-                        CircularPercentIndicator(
-                          radius: 40.0,
-                          lineWidth: 4.0,
-                          percent: _data["rating"] / 5.0,
-                          center: new Text(_data["rating"].toString()),
-                          progressColor: _progressColor(
-                              double.parse(_data["rating"].toString())),
-                          backgroundColor: Colors.white,
-                          circularStrokeCap: CircularStrokeCap.round,
-                        )
+                        _data["rating"] != null &&
+                                _data["rating"].toString().length != 0
+                            ? CircularPercentIndicator(
+                                radius: 40.0,
+                                lineWidth: 4.0,
+                                percent: _data["rating"] / 5.0,
+                                center: new Text(_data["rating"].toString()),
+                                progressColor: _progressColor(
+                                    double.parse(_data["rating"].toString())),
+                                backgroundColor: Colors.white,
+                                circularStrokeCap: CircularStrokeCap.round,
+                              )
+                            : Container()
                       ],
                     ),
                   ],
@@ -355,7 +345,135 @@ class _ProductState extends State<Product> {
                     height: 0,
                     width: 0,
                   ),
-            HeadingText(text: "Reviews"),
+            !widget.popular
+                ? Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      child: LearneeRegLogButton(
+                        color: Colors.blue,
+                        text: "Add to popular",
+                        action: () {
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              child: AlertDialog(
+                                content: Container(
+                                  height: 80,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Center(
+                                        child: Container(
+                                          height: 30,
+                                          width: 30,
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ));
+                          addEcommercePopularAPI(context,
+                                  name: widget.data['name'],
+                                  img: widget.data['img'],
+                                  price: widget.data['price'],
+                                  offerprice: widget.data['offer_prize'],
+                                  discountRate: widget.data['discount_rate'],
+                                  images: widget.data['Images'])
+                              .then((value) {
+                            if (value != 'fail') {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop();
+                              Fluttertoast.showToast(
+                                  msg: "Added to popular",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.green,
+                                  textColor: Colors.white,
+                                  fontSize: 14.0);
+                            } else {
+                              Navigator.of(context).pop();
+                              Fluttertoast.showToast(
+                                  msg: "Failed",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 14.0);
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                  )
+                : Container(),
+            !widget.featured
+                ? Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      child: LearneeRegLogButton(
+                        color: Colors.blue,
+                        text: "Add to Featured",
+                        action: () {
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              child: AlertDialog(
+                                content: Container(
+                                  height: 80,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Center(
+                                        child: Container(
+                                          height: 30,
+                                          width: 30,
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ));
+                          addEcommerceFeaturedAPI(context,
+                                  name: widget.data['name'],
+                                  img: widget.data['img'],
+                                  price: widget.data['price'],
+                                  offerprice: widget.data['offer_prize'],
+                                  discountRate: widget.data['discount_rate'],
+                                  images: widget.data['Images'])
+                              .then((value) {
+                            if (value != 'fail') {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop();
+                              Fluttertoast.showToast(
+                                  msg: "Added to popular",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.green,
+                                  textColor: Colors.white,
+                                  fontSize: 14.0);
+                            } else {
+                              Navigator.of(context).pop();
+                              Fluttertoast.showToast(
+                                  msg: "Failed",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 14.0);
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                  )
+                : Container(),
+            /*HeadingText(text: "Reviews"),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -395,10 +513,13 @@ class _ProductState extends State<Product> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                Row(
-                                  children: _starList(
-                                      double.parse(_data["rating"].toString())),
-                                )
+                                _data["rating"] != null &&
+                                        _data["rating"].toString().length != 0
+                                    ? Row(
+                                        children: _starList(double.parse(
+                                            _data["rating"].toString())),
+                                      )
+                                    : Container()
                               ],
                             ),
                             SizedBox(
@@ -419,10 +540,10 @@ class _ProductState extends State<Product> {
                   );
                 }),
               ),
-            ),
-            Column(
+            ),*/
+            /*Column(
               children: [
-                HeadingText(text: "Similar Products"),
+                HeadingText(text: "Other Products"),
                 SizedBox(
                   height: 10,
                 ),
@@ -456,7 +577,7 @@ class _ProductState extends State<Product> {
                   ),
                 ),
               ],
-            ),
+            ),*/
             SizedBox(
               height: 70,
             )
@@ -470,7 +591,15 @@ class _ProductState extends State<Product> {
 // ignore: must_be_immutable
 class QuantitySelector extends StatefulWidget {
   _ProductState parent;
-  QuantitySelector({this.parent});
+  String name;
+  var price;
+  var userId;
+
+  QuantitySelector(
+      {@required this.parent,
+      @required this.name,
+      @required this.userId,
+      @required this.price});
   @override
   _QuantitySelectorState createState() => _QuantitySelectorState();
 }
@@ -546,7 +675,60 @@ class _QuantitySelectorState extends State<QuantitySelector> {
           Padding(
             padding: const EdgeInsets.fromLTRB(40, 4, 40, 4),
             child: LearneeRegLogButton(
-                action: () {}, color: appBarColor, text: "Add to Cart"),
+                action: () {
+                  /*showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      child: AlertDialog(
+                        content: Container(
+                          height: 80,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: Container(
+                                  height: 30,
+                                  width: 30,
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ));
+                  addToCart(context,
+                          userId: widget.userId,
+                          name: widget.name,
+                          price: widget.price,
+                          quantity: quantity)
+                      .then((value) {
+                    var decoded = jsonDecode(value.body);
+                    Navigator.of(context).pop();
+                    if (value.statusCode == 200) {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      Fluttertoast.showToast(
+                          msg: "Added to cart",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 14.0);
+                    } else {
+                      Fluttertoast.showToast(
+                          msg: decoded.statusCode.toString(),
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 14.0);
+                    }
+                  });*/
+                },
+                color: appBarColor,
+                text: "Add to Cart"),
           )
         ],
       ),

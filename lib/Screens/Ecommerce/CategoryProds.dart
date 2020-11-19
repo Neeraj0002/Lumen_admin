@@ -35,8 +35,7 @@ class _CategoryProdsState extends State<CategoryProds> {
             action: () {
               Navigator.of(context).push(MaterialPageRoute(
                   settings: RouteSettings(name: "/categoryProducts"),
-                  builder: (context) =>
-                      Product(data: _data[index], similarProducts: _data)));
+                  builder: (context) => Product(data: _data[index])));
             },
           );
         }),

@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:lumin_admin/API_Functions/apiConfig.dart';
 
-Future addEcommerceProductsAPI(
+Future addEcommercePopularAPI(
   BuildContext context, {
   @required String name,
   @required String img,
-  @required String price,
-  @required String offerprice,
+  @required int price,
+  @required int offerprice,
   @required String discountRate,
-  @required List<String> images,
+  @required List images,
 }) async {
-  final url = "$mainUrl2/ecommerce/product";
+  final url = "$mainUrl2/ecommerce/popular";
 
   Map<String, dynamic> body = {
     'name': name,

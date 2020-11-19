@@ -3,9 +3,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:lumin_admin/API_Functions/apiConfig.dart';
 
-Future deleteEcommerceProductAPI(BuildContext context,
+Future deleteEcommercePopularAPI(BuildContext context,
     {@required String id}) async {
-  final url = "$mainUrl2/ecommerce/product/$id";
+  final url = "$mainUrl2/ecommerce/popular/$id";
 
   Response result;
   result = await delete(url, headers: {"Content-Type": "application/json"});

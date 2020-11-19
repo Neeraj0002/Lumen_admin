@@ -1,17 +1,17 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart';
 import 'package:lumin_admin/API_Functions/apiConfig.dart';
+import 'package:http/http.dart';
 
-Future deleteEcommerceProductAPI(BuildContext context,
-    {@required String id}) async {
-  final url = "$mainUrl2/ecommerce/product/$id";
+Future getEcommercePopularAPI() async {
+  final url = "$mainUrl2/ecommerce/popular";
 
   Response result;
-  result = await delete(url, headers: {"Content-Type": "application/json"});
+  result = await get(url);
 
   if (result.statusCode == 200) {
-    return result.body;
+    return jsonDecode(result.body);
   } else {
     Fluttertoast.showToast(
         msg: result.statusCode.toString(),
@@ -21,6 +21,6 @@ Future deleteEcommerceProductAPI(BuildContext context,
         backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 14.0);
-    return "fail";
+    return 'fail';
   }
 }

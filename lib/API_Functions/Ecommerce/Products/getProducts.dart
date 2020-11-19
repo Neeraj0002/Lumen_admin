@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lumin_admin/API_Functions/apiConfig.dart';
 import 'package:http/http.dart';
 
-Future getEcommerceProductsImagesAPI() async {
+Future getEcommerceProductsAPI() async {
   final url = "$mainUrl2/ecommerce/product";
 
   Response result;

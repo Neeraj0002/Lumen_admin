@@ -9,7 +9,6 @@ import 'package:lumin_admin/Components/userDisplayCard.dart';
 import 'package:lumin_admin/EcommerceDashboard.dart';
 import 'package:lumin_admin/Essentials/colors.dart';
 import 'package:lumin_admin/Essentials/getterFunctions.dart';
-import 'package:lumin_admin/Essentials/storedData.dart';
 import 'package:lumin_admin/Screens/AllCourses.dart';
 import 'package:lumin_admin/Screens/Attendance.dart';
 import 'package:lumin_admin/Screens/Home/chatrooms.dart';
@@ -17,11 +16,7 @@ import 'package:lumin_admin/Screens/AddCourse.dart';
 import 'package:lumin_admin/Screens/Live/live.dart';
 import 'package:lumin_admin/Screens/ManageCategory.dart';
 import 'package:lumin_admin/Screens/ManageSlider.dart';
-import 'package:lumin_admin/Screens/Purchases.dart';
-import 'package:lumin_admin/Screens/Teachers.dart';
 import 'package:lumin_admin/Screens/financial.dart';
-import 'package:lumin_admin/Screens/User/myCoursesAndPurchases.dart';
-import 'package:lumin_admin/Screens/User/newTicketScreen.dart';
 import 'package:lumin_admin/Screens/login.dart';
 import 'package:lumin_admin/Screens/Users.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -333,7 +328,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             icon: MdiIcons.finance,
                           ),
                           //TO VIEW ECOMMERCE DASHBOARD UNCOMMENT THIS PART
-                          /*LearneeRoundedBtn(
+                          LearneeRoundedBtn(
                             action: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                 settings: RouteSettings(name: "/financial"),
@@ -342,7 +337,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             },
                             text: "Ecommerce",
                             icon: MdiIcons.cart,
-                          ),*/
+                          ),
                         ],
                       ),
                     );

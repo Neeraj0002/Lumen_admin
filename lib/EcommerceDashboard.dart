@@ -4,6 +4,7 @@ import 'package:lumin_admin/Components/buttons.dart';
 import 'package:lumin_admin/Screens/Ecommerce/ManageCategory.dart';
 import 'package:lumin_admin/Screens/Ecommerce/ManageProducts.dart';
 import 'package:lumin_admin/Screens/Ecommerce/ManageSlider.dart';
+import 'package:lumin_admin/Screens/ManageEcommerceProducts.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -46,6 +47,16 @@ class _EcommerceDashboardState extends State<EcommerceDashboard> {
               },
               text: "Categories",
               icon: Icons.list,
+            ),
+            LearneeRoundedBtn(
+              action: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  settings: RouteSettings(name: "/products"),
+                  builder: (context) => ManageProducts(),
+                ));
+              },
+              text: "Products",
+              icon: Icons.shopping_cart,
             ),
             /*LearneeRoundedBtn(
               action: () {

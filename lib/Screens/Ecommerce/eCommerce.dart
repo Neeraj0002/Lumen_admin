@@ -135,7 +135,6 @@ class _EcommerceHomePageState extends State<EcommerceHomePage> {
                                     settings: RouteSettings(name: "product"),
                                     builder: (context) => Product(
                                       data: recomended[index],
-                                      similarProducts: featured,
                                     ),
                                   ));
                                 });
@@ -165,7 +164,6 @@ class _EcommerceHomePageState extends State<EcommerceHomePage> {
                                   settings: RouteSettings(name: "product"),
                                   builder: (context) => Product(
                                     data: featured[index],
-                                    similarProducts: mostPopular,
                                   ),
                                 ));
                               },
@@ -200,7 +198,6 @@ class _EcommerceHomePageState extends State<EcommerceHomePage> {
                                   settings: RouteSettings(name: "product"),
                                   builder: (context) => Product(
                                     data: mostPopular[index],
-                                    similarProducts: featured,
                                   ),
                                 ));
                               },
