@@ -23,7 +23,8 @@ class _EcommerceOrdersState extends State<EcommerceOrders> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasData) {
-                var parsedData = jsonDecode(snapshot.data);
+                List data = jsonDecode(snapshot.data);
+                List parsedData = data.reversed.toList();
                 return ListView(
                     children: List.generate(parsedData.length, (index) {
                   return OrderItem(
@@ -114,7 +115,7 @@ class OrderItem extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
                   child: Text(
                     address != null && address.length != 0
-                        ? "address\naddress\naddress"
+                        ? "${address[0]},\n${address[1]},\n${address[2]}"
                         : "Address not available",
                     style: TextStyle(
                         color: Colors.black, fontFamily: "Jost", fontSize: 14),

@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:lumin_admin/API_Functions/apiConfig.dart';
 
-Future addEcommerceProductsAPI(
-  BuildContext context, {
-  @required String name,
-  @required String img,
-  @required String price,
-  @required String offerprice,
-  @required String discountRate,
-  @required List<String> images,
-}) async {
+Future addEcommerceProductsAPI(BuildContext context,
+    {@required String name,
+    @required String img,
+    @required String price,
+    @required String offerprice,
+    @required String discountRate,
+    @required List<String> images,
+    @required String category}) async {
   final url = "$mainUrl2/ecommerce/product";
 
   Map<String, dynamic> body = {
@@ -20,7 +19,8 @@ Future addEcommerceProductsAPI(
     'price': price,
     'offer_prize': offerprice,
     'discount_rate': discountRate,
-    'images': images
+    'images': images,
+    "category": category
   };
 
   print(body);

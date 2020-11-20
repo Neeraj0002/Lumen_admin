@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lumin_admin/API_Functions/Ecommerce/Categories/getCategoriesAPI.dart';
 import 'package:lumin_admin/Components/appBar.dart';
 import 'package:lumin_admin/Components/buttons.dart';
 import 'package:lumin_admin/Screens/Ecommerce/ManageCategory.dart';
@@ -53,10 +54,37 @@ class _EcommerceDashboardState extends State<EcommerceDashboard> {
             ),
             LearneeRoundedBtn(
               action: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  settings: RouteSettings(name: "/products"),
-                  builder: (context) => ManageProducts(),
-                ));
+                showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    child: AlertDialog(
+                      content: Container(
+                        height: 80,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: Container(
+                                height: 30,
+                                width: 30,
+                                child: CircularProgressIndicator(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ));
+                getEcommerceCategoriesAPI().then((value) {
+                  Navigator.pop(context);
+                  if (value != 'null') {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      settings: RouteSettings(name: "/products"),
+                      builder: (context) => ManageProducts(
+                        categories: value,
+                      ),
+                    ));
+                  }
+                });
               },
               text: "Products",
               icon: Icons.shopping_cart,

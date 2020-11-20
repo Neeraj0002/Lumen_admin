@@ -14,6 +14,8 @@ import 'package:lumin_admin/Essentials/colors.dart';
 import 'package:lumin_admin/Screens/Ecommerce/Product.dart';
 
 class ManageProducts extends StatefulWidget {
+  var categories;
+  ManageProducts({@required this.categories});
   @override
   _ManageProductsState createState() => _ManageProductsState();
 }
@@ -44,6 +46,7 @@ class _ManageProductsState extends State<ManageProducts> {
                 context: context,
                 child: AddProductDialog(
                   parent: this,
+                  categories: widget.categories,
                 ));
           }),
       backgroundColor: bgColor,
@@ -405,7 +408,8 @@ class ProductItem extends StatelessWidget {
 // ignore: must_be_immutable
 class AddProductDialog extends StatefulWidget {
   _ManageProductsState parent;
-  AddProductDialog({this.parent});
+  var categories;
+  AddProductDialog({this.parent, this.categories});
   @override
   _AddProductDialogState createState() => _AddProductDialogState();
 }
@@ -416,6 +420,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
   TextEditingController offerPrice = TextEditingController();
   TextEditingController imgUrl = TextEditingController();
   TextEditingController discountRate = TextEditingController();
+  String categoryName;
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -429,6 +434,66 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 hideText: false,
                 textController: name,
                 icon: null),
+            PopupMenuButton(
+              itemBuilder: (context) => List.generate(
+                widget.categories['Categories'].length,
+                (index) => PopupMenuItem(
+                  value: widget.categories['Categories'][index]['title'],
+                  child: Text(widget.categories['Categories'][index]['title']),
+                ),
+              ),
+              initialValue: null,
+              onSelected: (value) async {
+                FocusScope.of(context).requestFocus(new FocusNode());
+                setState(() {
+                  categoryName = value;
+                });
+              },
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Container(
+                  height: 55,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black12,
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                            offset: Offset(0, 0))
+                      ]),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(
+                            categoryName == null
+                                ? "Select Category"
+                                : categoryName,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Icon(
+                            Icons.arrow_drop_down,
+                            size: 20,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
             LearneeTextField(
                 hint: "Enter Price",
                 label: "Price",
@@ -457,7 +522,8 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 action: () {
                   if (name.text.isNotEmpty &&
                       price.text.isNotEmpty &&
-                      imgUrl.text.isNotEmpty) {
+                      imgUrl.text.isNotEmpty &&
+                      categoryName != null) {
                     showDialog(
                         context: context,
                         barrierDismissible: false,
@@ -485,6 +551,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                         price: price.text,
                         offerprice: offerPrice.text,
                         discountRate: discountRate.text,
+                        category: categoryName,
                         images: [imgUrl.text]).then((value) {
                       Navigator.pop(context);
                       if (value != 'fail') {
