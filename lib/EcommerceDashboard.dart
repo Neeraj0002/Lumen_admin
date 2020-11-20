@@ -4,6 +4,9 @@ import 'package:lumin_admin/Components/buttons.dart';
 import 'package:lumin_admin/Screens/Ecommerce/ManageCategory.dart';
 import 'package:lumin_admin/Screens/Ecommerce/ManageProducts.dart';
 import 'package:lumin_admin/Screens/Ecommerce/ManageSlider.dart';
+import 'package:lumin_admin/Screens/ManageEcommerceFeatured.dart';
+import 'package:lumin_admin/Screens/ManageEcommerceOrders.dart';
+import 'package:lumin_admin/Screens/ManageEcommercePopular.dart';
 import 'package:lumin_admin/Screens/ManageEcommerceProducts.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -57,6 +60,36 @@ class _EcommerceDashboardState extends State<EcommerceDashboard> {
               },
               text: "Products",
               icon: Icons.shopping_cart,
+            ),
+            LearneeRoundedBtn(
+              action: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  settings: RouteSettings(name: "/featured"),
+                  builder: (context) => ManageEcommerceFeatured(),
+                ));
+              },
+              text: "Featured",
+              icon: Icons.featured_play_list,
+            ),
+            LearneeRoundedBtn(
+              action: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  settings: RouteSettings(name: "/popular"),
+                  builder: (context) => ManageEcommercePopular(),
+                ));
+              },
+              text: "Popular",
+              icon: MdiIcons.finance,
+            ),
+            LearneeRoundedBtn(
+              action: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  settings: RouteSettings(name: "/orders"),
+                  builder: (context) => EcommerceOrders(),
+                ));
+              },
+              text: "Orders",
+              icon: MdiIcons.shoppingOutline,
             ),
             /*LearneeRoundedBtn(
               action: () {

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lumin_admin/API_Functions/Category/getCategories.dart';
 import 'package:lumin_admin/API_Functions/Ecommerce/Featured/getFeatured.dart';
-import 'package:lumin_admin/API_Functions/Ecommerce/Featured/removeFeatured.dart';
 import 'package:lumin_admin/API_Functions/Ecommerce/Popular/getPopular.dart';
 import 'package:lumin_admin/API_Functions/Ecommerce/Popular/removePopular.dart';
 import 'package:lumin_admin/API_Functions/Ecommerce/Products/addProductsAPI.dart';
@@ -15,13 +14,12 @@ import 'package:lumin_admin/Components/textBox.dart';
 import 'package:lumin_admin/Essentials/colors.dart';
 import 'package:lumin_admin/Screens/Ecommerce/Product.dart';
 
-class ManageEcommerceFeatured extends StatefulWidget {
+class ManageEcommercePopular extends StatefulWidget {
   @override
-  _ManageEcommerceFeaturedState createState() =>
-      _ManageEcommerceFeaturedState();
+  _ManageEcommercePopularState createState() => _ManageEcommercePopularState();
 }
 
-class _ManageEcommerceFeaturedState extends State<ManageEcommerceFeatured> {
+class _ManageEcommercePopularState extends State<ManageEcommercePopular> {
   LearneeAppBar appBar = LearneeAppBar();
   TextEditingController category = TextEditingController();
   var result;
@@ -41,26 +39,26 @@ class _ManageEcommerceFeaturedState extends State<ManageEcommerceFeatured> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar.simpleAppBar(
-        title: "Featured",
+        title: "Popular",
       ),
       backgroundColor: bgColor,
       body: FutureBuilder(
-          future: getEcommerceFeaturedAPI(),
+          future: getEcommercePopularAPI(),
           builder: (context, snapshot) {
             if (ConnectionState.done == snapshot.connectionState) {
               if (snapshot.hasData) {
                 return ListView(
-                  children:
-                      List.generate(snapshot.data["featured"].length, (index) {
+                  children: List.generate(snapshot.data["most_popular"].length,
+                      (index) {
                     return ProductItem(
                         parent: this,
-                        id: snapshot.data["featured"][index]['id'],
-                        price: snapshot.data["featured"][index]['price'],
-                        name: snapshot.data["featured"][index]['name'],
-                        imgUrl: snapshot.data["featured"][index]['img'],
-                        offerPrice: snapshot.data["featured"][index]
+                        id: snapshot.data["most_popular"][index]['id'],
+                        price: snapshot.data["most_popular"][index]['price'],
+                        name: snapshot.data["most_popular"][index]['name'],
+                        imgUrl: snapshot.data["most_popular"][index]['img'],
+                        offerPrice: snapshot.data["most_popular"][index]
                             ['offer_prize'],
-                        discountRate: snapshot.data["featured"][index]
+                        discountRate: snapshot.data["most_popular"][index]
                             ['discount_rate']);
                   }),
                 );
@@ -88,7 +86,7 @@ class ProductItem extends StatelessWidget {
   int offerPrice;
   dynamic discountRate;
   String id;
-  _ManageEcommerceFeaturedState parent;
+  _ManageEcommercePopularState parent;
   ProductItem(
       {@required this.price,
       @required this.name,
@@ -255,8 +253,7 @@ class ProductItem extends StatelessWidget {
                                               ),
                                             ),
                                           ));
-                                      deleteEcommerceFeaturedAPI(context,
-                                              id: id)
+                                      deleteEcommercePopularAPI(context, id: id)
                                           .then((value) {
                                         Navigator.pop(context);
                                         if (value != 'fail') {
@@ -326,7 +323,7 @@ class ProductItem extends StatelessWidget {
 
 // ignore: must_be_immutable
 class AddProductDialog extends StatefulWidget {
-  _ManageEcommerceFeaturedState parent;
+  _ManageEcommercePopularState parent;
   AddProductDialog({this.parent});
   @override
   _AddProductDialogState createState() => _AddProductDialogState();
